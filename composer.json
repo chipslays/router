@@ -1,0 +1,17 @@
+{
+    "name": "chipslays/router",
+    "description": "A lightweight and simple object oriented PHP Router",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "chipslays",
+            "email": "hello@chipslays.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Chipslays\\Router\\": "src/"
+        }
+    }
+}
