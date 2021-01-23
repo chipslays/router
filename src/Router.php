@@ -270,6 +270,7 @@ class Router
      */
     public function run($callback = null)
     {
+        
         // Define which method we need to handle
         $this->requestedMethod = $this->getRequestMethod();
 
@@ -277,7 +278,7 @@ class Router
         if (isset($this->beforeRoutes[$this->requestedMethod])) {
             $this->handle($this->beforeRoutes[$this->requestedMethod]);
         }
-
+        
         // Handle all routes
         $numHandled = 0;
         if (isset($this->afterRoutes[$this->requestedMethod])) {
@@ -290,13 +291,16 @@ class Router
         } // If a route was handled, perform the finish callback (if any)
         else {
             if ($callback && is_callable($callback)) {
-                $callback();
+                $result = $callback();
+
             }
+
         }
 
         // If it originally was a HEAD request, clean up after ourselves by emptying the output buffer
         if ($_SERVER['REQUEST_METHOD'] == 'HEAD') {
             ob_end_clean();
+            
         }
 
         // Return true if a route was handled, false otherwise
@@ -347,6 +351,7 @@ class Router
 
             // we have a match!
             if (preg_match_all('#^' . $route['pattern'] . '$#', $uri, $matches, PREG_OFFSET_CAPTURE)) {
+
                 // Rework matches to only contain the matches, not the orig string
                 $matches = array_slice($matches, 1);
 
@@ -363,8 +368,10 @@ class Router
                     return isset($match[0][0]) && $match[0][1] != -1 ? trim($match[0][0], '/') : null;
                 }, $matches, array_keys($matches));
 
+
                 // Call the handling function with the URL parameters if the desired input is callable
                 $this->invoke($route['fn'], $params);
+
 
                 ++$numHandled;
 
@@ -382,7 +389,11 @@ class Router
     private function invoke($fn, $params = array())
     {
         if (is_callable($fn)) {
-            call_user_func_array($fn, $params);
+            $result = call_user_func_array($fn, $params);
+
+            if (is_array($result)) {
+                echo json_encode($result, JSON_PRETTY_PRINT);
+            }
         }
 
         // If not, check the existence of special parameters
