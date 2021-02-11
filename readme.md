@@ -8,3 +8,8 @@
 ```bash
 $ composer require chipslays/router
 ```
+
+```
+List of changes:
++ return array in callback for response as a json;
+```
