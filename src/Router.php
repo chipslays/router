@@ -392,6 +392,7 @@ class Router
             $result = call_user_func_array($fn, $params);
 
             if (is_array($result)) {
+                header('Content-type:application/json;charset=utf-8');
                 echo json_encode($result, JSON_PRETTY_PRINT);
             }
         }
